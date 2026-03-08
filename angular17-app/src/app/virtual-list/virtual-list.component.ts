@@ -35,20 +35,27 @@ import {
       <cdk-virtual-scroll-viewport
         #viewport
         itemSize="56"
+        minBufferPx="300"
+        maxBufferPx="500"
         class="viewport"
         cdkDropList
         [cdkDropListData]="items"
         (cdkDropListDropped)="drop($event)"
       >
         <div
-          *cdkVirtualFor="let item of items; let i = index"
+          *cdkVirtualFor="
+            let item of items;
+            let i = index;
+            templateCacheSize: 0;
+            trackBy: trackByItem
+          "
           cdkDrag
           class="item"
         >
           <div class="handle" cdkDragHandle>::</div>
           <div class="content">
-            <div class="title">第 {{ i + 1 }} 项</div>
-            <div class="desc">{{ item }}</div>
+            <div class="title">{{ item }}</div>
+            <div class="desc">当前索引：{{ i + 1 }}</div>
           </div>
         </div>
       </cdk-virtual-scroll-viewport>
@@ -179,5 +186,9 @@ export class VirtualListComponent {
 
   reset() {
     this.items = [...this.originalItems];
+  }
+
+  trackByItem(index: number, item: string) {
+    return item;
   }
 }
